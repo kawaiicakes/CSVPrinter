@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "id": "csvpainter",
+  "version": "${version}",
+  "name": "CSVPainter",
+  "description": "Automatically create custom block definition CSVs for WorldPainter.",
+  "authors": [
+    "kawaiicakes"
+  ],
+  "contact": {
+    "homepage": "https://github.com/kawaiicakes/",
+    "sources": "https://github.com/kawaiicakes/CSVPainter/"
+  },
+  "license": "MIT",
+  "icon": "assets/csvpainter/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "io.github.kawaiicakes.csvpainter.fabric.CSVPainterFabric"
+    ],
+    "client": [
+      "io.github.kawaiicakes.csvpainter.fabric.client.CSVPainterFabricClient"
+    ]
+  },
+  "mixins": [
+
+  ],
+  "depends": {
+    "fabricloader": ">=0.18.0",
+    "minecraft": "~1.20.1",
+    "java": ">=17",
+    "fabric-api": "*"
+  },
+  "suggests": {
+    "another-mod": "*"
+  }
+}
