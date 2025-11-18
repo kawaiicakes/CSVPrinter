@@ -7,7 +7,7 @@ pluginManagement {
     }
 }
 
-rootProject.name = 'csvpainter'
+rootProject.name = 'csvprinter'
 
 include 'common'
 include 'fabric'

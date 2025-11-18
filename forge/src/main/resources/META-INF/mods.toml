@@ -1,26 +1,26 @@
 modLoader = "javafml"
 loaderVersion = "[47,)"
-issueTrackerURL = "https://github.com/kawaiicakes/CSVPainter/issues"
+issueTrackerURL = "https://github.com/kawaiicakes/CSVPrinter/issues"
 license = "MIT"
 
 [[mods]]
-modId = "csvpainter"
+modId = "csvprinter"
 version = "${version}"
-displayName = "CSVPainter"
+displayName = "CSVPrinter"
 authors = "kawaiicakes"
 description = '''
 Automatically create custom block definition CSVs for WorldPainter..
 '''
-logoFile = "assets/csvpainter/icon.png"
+logoFile = "assets/csvprinter/icon.png"
 
-[[dependencies.csvpainter]]
+[[dependencies.csvprinter]]
 modId = "forge"
 mandatory = true
 versionRange = "[47,)"
 ordering = "NONE"
 side = "BOTH"
 
-[[dependencies.csvpainter]]
+[[dependencies.csvprinter]]
 modId = "minecraft"
 mandatory = true
 versionRange = "[1.20.1,)"

@@ -1,25 +1,25 @@
 {
   "schemaVersion": 1,
-  "id": "csvpainter",
+  "id": "csvprinter",
   "version": "${version}",
-  "name": "CSVPainter",
+  "name": "CSVPrinter",
   "description": "Automatically create custom block definition CSVs for WorldPainter.",
   "authors": [
     "kawaiicakes"
   ],
   "contact": {
     "homepage": "https://github.com/kawaiicakes/",
-    "sources": "https://github.com/kawaiicakes/CSVPainter/"
+    "sources": "https://github.com/kawaiicakes/CSVPrinter/"
   },
   "license": "MIT",
-  "icon": "assets/csvpainter/icon.png",
+  "icon": "assets/csvprinter/icon.png",
   "environment": "*",
   "entrypoints": {
     "main": [
-      "io.github.kawaiicakes.csvpainter.fabric.CSVPainterFabric"
+      "io.github.kawaiicakes.csvprinter.fabric.CSVPrinter"
     ],
     "client": [
-      "io.github.kawaiicakes.csvpainter.fabric.client.CSVPainterFabricClient"
+      "io.github.kawaiicakes.csvprinter.fabric.CSVPrinter"
     ]
   },
   "mixins": [
