@@ -18,6 +18,8 @@ public final class CSVPrinterFabric implements ModInitializer, ClientModInitiali
         ServerLifecycleEvents.END_DATA_PACK_RELOAD.register(
                 (ignored0, ignored1, ignored2) -> CSVPrinter.writeCSV()
         );
+
+        ServerLifecycleEvents.SERVER_STARTED.register((ignored) -> CSVPrinter.writeCSV());
     }
 
     @Override

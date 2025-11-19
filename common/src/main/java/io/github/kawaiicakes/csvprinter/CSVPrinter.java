@@ -45,7 +45,7 @@ public final class CSVPrinter {
                 // if (name.getNamespace().equals("minecraft")) continue;
 
                 final String propertiesForBlock = properties(block); // So this doesn't have to be repeatedly called
-                final boolean isBE = block instanceof BaseEntityBlock;
+                final String isBE = isBE(block);
                 final String mapColour = Integer.toHexString(block.defaultMapColor().calculateRGBColor(MapColor.Brightness.HIGH));
 
                 for (BlockState state : block.getStateDefinition().getPossibleStates()) {
@@ -56,8 +56,8 @@ public final class CSVPrinter {
                             "," + // receivesLight
                             "," + // insubstantial
                             "," + // resource
-                            isBE + "," +
-                            blockEntityType(state) + // tileEntityId
+                            isBE +
+                            blockEntityType(state) +
                             "," + // treeRelated
                             "," + // vegetation
                             lightEmission(state) +
@@ -78,6 +78,12 @@ public final class CSVPrinter {
     private static String lightEmission(BlockState state) {
         return state.getLightEmission() > 0
                 ? state.getLightEmission() + ","
+                : ",";
+    }
+
+    private static String isBE(Block block) {
+        return block instanceof BaseEntityBlock
+                ? "true,"
                 : ",";
     }
 
@@ -120,15 +126,15 @@ public final class CSVPrinter {
 
         if (ordered.isEmpty()) return ",";
 
-        StringBuilder properties = new StringBuilder("\"");
+        final StringBuilder properties = new StringBuilder("\"");
 
         for (Property<?> property : ordered) {
-            StringBuilder propertyValues = new StringBuilder("\"");
-            propertyValues.append(property.getName()).append(":");
+            final StringBuilder propertyValues = new StringBuilder(property.getName())
+                    .append(":");
 
             if (property instanceof EnumProperty<?> enumProperty) {
                 Collection<?> possible = enumProperty.getPossibleValues();
-                propertyValues = new StringBuilder("e[");
+                propertyValues.append("e[");
 
                 for (Object object : possible) {
                     if (!(object instanceof StringRepresentable str)) continue;
@@ -137,10 +143,14 @@ public final class CSVPrinter {
 
                 propertyValues.append("]");
             } else if (property instanceof BooleanProperty) {
-                propertyValues = new StringBuilder("b");
+                propertyValues.append("b");
             } else if (property instanceof IntegerProperty integerProperty) {
                 Collection<Integer> possible = integerProperty.getPossibleValues();
-                propertyValues = new StringBuilder("i[" + Collections.min(possible) + "-" + Collections.max(possible) + "]");
+                propertyValues.append("i[")
+                        .append(Collections.min(possible))
+                        .append("-")
+                        .append(Collections.max(possible))
+                        .append("]");
             }
 
             if (ordered.indexOf(property) != ordered.size() - 1) propertyValues.append(",");
