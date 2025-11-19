@@ -41,6 +41,7 @@ public final class CSVPrinter {
             for (Block block : BuiltInRegistries.BLOCK) {
                 final ResourceLocation name = BuiltInRegistries.BLOCK.getKey(block);
 
+                // TODO - remove when done debugging
                 // if (name.getNamespace().equals("minecraft")) continue;
 
                 final String propertiesForBlock = properties(block); // So this doesn't have to be repeatedly called
@@ -59,7 +60,7 @@ public final class CSVPrinter {
                             blockEntityType(state) + // tileEntityId
                             "," + // treeRelated
                             "," + // vegetation
-                            block.defaultBlockState().getLightEmission() + "," +
+                            lightEmission(state) +
                             "," + // natural
                             "," + // watery
                             mapColour;
@@ -72,6 +73,12 @@ public final class CSVPrinter {
         } catch (Exception lol) {
             LOGGER.error("CSVPrinter was unable to run!", lol);
         }
+    }
+
+    private static String lightEmission(BlockState state) {
+        return state.getLightEmission() > 0
+                ? state.getLightEmission() + ","
+                : ",";
     }
 
     private static String blockEntityType(BlockState state) {
@@ -109,9 +116,11 @@ public final class CSVPrinter {
     }
 
     private static String properties(Block block) {
-        StringBuilder properties = new StringBuilder("\"");
-
         final List<Property<?>> ordered = new ArrayList<>(block.getStateDefinition().getProperties());
+
+        if (ordered.isEmpty()) return ",";
+
+        StringBuilder properties = new StringBuilder("\"");
 
         for (Property<?> property : ordered) {
             StringBuilder propertyValues = new StringBuilder("\"");

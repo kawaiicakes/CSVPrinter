@@ -16,10 +16,10 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "io.github.kawaiicakes.csvprinter.fabric.CSVPrinter"
+      "io.github.kawaiicakes.csvprinter.fabric.CSVPrinterFabric"
     ],
     "client": [
-      "io.github.kawaiicakes.csvprinter.fabric.CSVPrinter"
+      "io.github.kawaiicakes.csvprinter.fabric.CSVPrinterFabric"
     ]
   },
   "mixins": [

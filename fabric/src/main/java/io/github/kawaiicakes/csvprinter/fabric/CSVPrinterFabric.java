@@ -1,9 +1,11 @@
 package io.github.kawaiicakes.csvprinter.fabric;
 
+import io.github.kawaiicakes.csvprinter.CSVPrinter;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 
-public final class CSVPrinter implements ModInitializer, ClientModInitializer {
+public final class CSVPrinterFabric implements ModInitializer, ClientModInitializer {
     @Override
     public void onInitialize() {
         // This code runs as soon as Minecraft is in a mod-load-ready state.
@@ -11,7 +13,11 @@ public final class CSVPrinter implements ModInitializer, ClientModInitializer {
         // Proceed with mild caution.
 
         // Run our common setup.
-        io.github.kawaiicakes.csvprinter.CSVPrinter.init();
+        CSVPrinter.init();
+
+        ServerLifecycleEvents.END_DATA_PACK_RELOAD.register(
+                (ignored0, ignored1, ignored2) -> CSVPrinter.writeCSV()
+        );
     }
 
     @Override
