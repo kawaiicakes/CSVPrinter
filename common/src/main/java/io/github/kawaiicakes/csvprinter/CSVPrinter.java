@@ -1,11 +1,15 @@
 package io.github.kawaiicakes.csvprinter;
 
+import com.google.common.collect.ImmutableMap;
 import com.mojang.logging.LogUtils;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
@@ -15,10 +19,7 @@ import org.slf4j.Logger;
 
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public final class CSVPrinter {
     public static Logger LOGGER = LogUtils.getLogger();
@@ -40,31 +41,71 @@ public final class CSVPrinter {
             for (Block block : BuiltInRegistries.BLOCK) {
                 final ResourceLocation name = BuiltInRegistries.BLOCK.getKey(block);
 
-                if (name.getNamespace().equals("minecraft")) continue;
+                // if (name.getNamespace().equals("minecraft")) continue;
 
-                String entry = name + "," +
-                        "," + // discriminator
-                        properties(block) + // properties
-                        "," + // opacity
-                        "," + // receivesLight
-                        "," + // insubstantial
-                        "," + // resource
-                        (block instanceof BaseEntityBlock) + "," +
-                        "," + // tileEntityId
-                        "," + // treeRelated
-                        "," + // vegetation
-                        block.defaultBlockState().getLightEmission() + "," +
-                        "," + // natural
-                        "," + // watery
-                        Integer.toHexString(block.defaultMapColor().calculateRGBColor(MapColor.Brightness.HIGH));
+                final String propertiesForBlock = properties(block); // So this doesn't have to be repeatedly called
+                final boolean isBE = block instanceof BaseEntityBlock;
+                final String mapColour = Integer.toHexString(block.defaultMapColor().calculateRGBColor(MapColor.Brightness.HIGH));
 
-                writer.println(entry);
+                for (BlockState state : block.getStateDefinition().getPossibleStates()) {
+                    String entry = name + "," +
+                            discriminator(state) +
+                            propertiesForBlock +
+                            "," + // opacity
+                            "," + // receivesLight
+                            "," + // insubstantial
+                            "," + // resource
+                            isBE + "," +
+                            blockEntityType(state) + // tileEntityId
+                            "," + // treeRelated
+                            "," + // vegetation
+                            block.defaultBlockState().getLightEmission() + "," +
+                            "," + // natural
+                            "," + // watery
+                            mapColour;
+
+                    writer.println(entry);
+                }
             }
 
             writer.close();
         } catch (Exception lol) {
             LOGGER.error("CSVPrinter was unable to run!", lol);
         }
+    }
+
+    private static String blockEntityType(BlockState state) {
+        final Set<Map.Entry<ResourceKey<BlockEntityType<?>>, BlockEntityType<?>>> entries = BuiltInRegistries.BLOCK_ENTITY_TYPE.entrySet();
+
+        for (Map.Entry<ResourceKey<BlockEntityType<?>>, BlockEntityType<?>> entry : entries) {
+            if (!entry.getValue().isValid(state)) continue;
+            return entry.getKey().location() + ",";
+        }
+
+        return ",";
+    }
+
+    private static String discriminator(BlockState state) {
+        final ImmutableMap<Property<?>, Comparable<?>> propertyMap = state.getValues();
+
+        if (propertyMap.isEmpty()) return ",";
+
+        StringBuilder properties = new StringBuilder("\"");
+
+        for (Map.Entry<Property<?>,Comparable<?>> entry : propertyMap.entrySet()) {
+            final Property<?> key = entry.getKey();
+            final Comparable<?> value = entry.getValue();
+
+            properties.append(key.getName())
+                    .append("=")
+                    .append(value)
+                    .append(",");
+        }
+
+        properties.deleteCharAt(properties.lastIndexOf(","))
+                .append("\",");
+
+        return properties.toString();
     }
 
     private static String properties(Block block) {
